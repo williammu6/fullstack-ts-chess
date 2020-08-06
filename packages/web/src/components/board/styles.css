@@ -11,7 +11,9 @@
 
 @media only screen and (max-width: 640px) {
   .board {
-    width: 95vw;
-    height: 95vw;
+    width: 93vw;
+    height: 93vw;
   }
 }
+
+
