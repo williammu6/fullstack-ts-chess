@@ -1,10 +1,13 @@
 import styled from "styled-components";
 
+type Props = {
+  dark?: boolean;
+};
+
 const Tile = styled.div.attrs({
-  className: "border border-solid border-2 border-gray-300"
+  className: ""
 })`
-  background: white;
+  background: ${(p: Props) => (p.dark ? "gray" : "white")};
   flex: 1;
 `;
-
 export default Tile;
