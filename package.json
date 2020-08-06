@@ -4,10 +4,12 @@
     "packages/*"
   ],
   "scripts": {
+    "start": "lerna run start",
     "build": "lerna run build"
   },
   "devDependencies": {
-    "lerna": "^3.22.1"
+    "lerna": "^3.22.1",
+    "typescript": "^3.9.7"
   },
   "name": "fullstack-ts-chess"
 }

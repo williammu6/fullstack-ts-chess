@@ -5,7 +5,8 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "rootDir": "src",
-    "outDir": "dist",
-    "declaration": true
+    "outDir": "dist/",
+    "declaration": true,
+    "types": []
   }
 }

@@ -7,9 +7,12 @@ import Button from "../../components/UI/Button";
 const Home = () => {
   return (
     <div className="flex items-center justify-center h-full">
-      <Button>
-        <Link to="/play">Play</Link>
-      </Button>
+
+      <Link to="/play">
+        <Button>
+          Play
+        </Button>
+      </Link>
     </div>
   );
 };
