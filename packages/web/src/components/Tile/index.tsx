@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { Game } from "../../Game";
 
 import { Position } from "../../types/Position";
+import Overlay from "../Overlay";
 
 interface Props {
   col: number;
@@ -46,14 +47,12 @@ const Tile: React.FC<Props> = ({
   handleTileClick,
   handleMovePiece
 }: Props) => {
+
   const isDark = (row: number, col: number) => {
     return (row + col) % 2 === 1;
   };
 
   const getBackground = (): string => {
-    if (isValid) {
-      return "bg-green-300";
-    }
     return isDark(row, col) ? "bg-gray-600" : "bg-white";
   };
 
@@ -73,12 +72,13 @@ const Tile: React.FC<Props> = ({
     <div
       className={clsx(
         "relative flex-1",
-        isClickable() && "cursor-pointer",
-        getBackground()
+        getBackground(),
+        isClickable() && "cursor-pointer"
       )}
       onClick={handleClick}
     >
       {children}
+      {isValid && <Overlay /> }
       <span style={{ ...styleYLegend, ...legendFont }}>{yLegend}</span>
       <span style={{ ...styleXLegend, ...legendFont }}>{xLegend}</span>
     </div>

@@ -8,7 +8,8 @@ type Props = {
 
 const Piece: React.FC<Props> = ({ piece }: Props) => {
   const style = {
-    fontSize: "4rem"
+    fontSize: "4rem",
+    zIndex: 20
   };
 
   const renderPiece = () => {
