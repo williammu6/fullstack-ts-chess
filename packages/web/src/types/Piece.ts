@@ -1,7 +1,7 @@
 export type PieceColor = "black" | "white";
 
 
-export enum PieceTypes {
+export enum PieceName {
   PAWN = 'pawn',
   KNIGHT = 'knight',
   BISHOP = 'bishop',
@@ -10,9 +10,9 @@ export enum PieceTypes {
   ROOK = 'root'
 };
 
-export interface IPiece {
+export type PieceType = {
   color: PieceColor,
-  type: PieceTypes,
+  name: PieceName,
   moved: boolean,
   char: string,
 };

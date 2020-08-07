@@ -1,5 +1,5 @@
 import { charPieces } from "../Constants";
-import { IPiece, PieceTypes } from "../types/Piece";
+import { PieceType, PieceName } from "../types/Piece";
 
 const piecesOrder: string[] = [
   "ROOK",
@@ -15,8 +15,8 @@ const piecesOrder: string[] = [
 const getRowMajorPieces = (color: "black" | "white") => {
   let row = [];
   for (const piece of piecesOrder) {
-    const p: IPiece = {
-      type: PieceTypes[piece as keyof typeof PieceTypes],
+    const p: PieceType = {
+      name: PieceName[piece as keyof typeof PieceName],
       color,
       moved: false,
       char: charPieces[`${color.toUpperCase()}_${piece}`]
@@ -26,17 +26,17 @@ const getRowMajorPieces = (color: "black" | "white") => {
   return row;
 };
 
-const getRowPawns = (color: "black" | "white"): IPiece[] => {
+const getRowPawns = (color: "black" | "white"): PieceType[] => {
   return Array.from({ length: 8 }, () => ({
-    type: PieceTypes.PAWN,
+    name: PieceName.PAWN,
     moved: false,
     char: charPieces[`${color.toUpperCase()}_PAWN`],
     color
   }));
 };
 
-export const getInitialPosition = (): (IPiece | null)[][] => {
-  let board: (IPiece | null)[][] = [];
+export const getInitialPosition = (): (PieceType | null)[][] => {
+  let board: (PieceType | null)[][] = [];
 
   board.push(getRowMajorPieces("black"));
   board.push(getRowPawns("black"));

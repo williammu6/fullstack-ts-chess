@@ -1,8 +1,8 @@
 import React, { ReactNode } from "react";
-import { IPiece } from "../../types/Piece";
+import { PieceType } from "../../types/Piece";
 
 type Props = {
-  piece: IPiece;
+  piece: PieceType;
   children?: ReactNode;
 };
 
