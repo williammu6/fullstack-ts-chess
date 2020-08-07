@@ -55,7 +55,7 @@ const Board: React.FC<Props> = ({ game }: Props) => {
               {Array.from({ length: 8 }).map((_, col) => (
                 <Tile
                   xLegend={row === 7 ? letters[col] : null}
-                  yLegend={col === 0 ? row + 1 : null}
+                  yLegend={col === 0 ? 8 - row : null}
                   game={game}
                   key={col}
                   row={row}
