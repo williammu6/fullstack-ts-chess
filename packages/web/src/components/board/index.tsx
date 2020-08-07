@@ -1,12 +1,15 @@
 import React, { ReactNode, useState } from "react";
 
+import { PieceType } from "../../types/PieceType";
+import {Position} from "../../types/Position";
+
 import Tile from "../Tile";
 
 import Pawn from "../Pieces/Pawn";
 
-import "./styles.css";
 import { Game } from "../../Game";
-import { PieceType } from "../../types/PieceType";
+
+import "./styles.css";
 
 type Props = {
   game: Game;
@@ -16,10 +19,12 @@ type Props = {
 const Board: React.FC<Props> = ({ game }: Props) => {
   const [validMoves, setValidMoves] = useState<number[][]>([]);
 
+  const [selectedPiecePosition, setSelectedPiecePosition] = useState<Position | null>();
+
   const letters = ["A", "B", "C", "D", "E", "F", "G", "H"];
 
   const getPiece = (row: number, col: number) => {
-    const piece = game.board[row][col];
+    const piece = game.getPiece(row, col);
 
     if (piece) {
       switch (piece.type) {
@@ -33,12 +38,28 @@ const Board: React.FC<Props> = ({ game }: Props) => {
   };
 
   const handleTileClick = (row: number, col: number) => {
-    const validMoves = game.getValidMoves(row, col);
-    setValidMoves(validMoves);
+    const piece = game.getPiece(row, col);
+    if (piece) {
+      setSelectedPiecePosition({ row, col });
+      const validMoves = game.getValidMoves(piece, row, col);
+      setValidMoves(validMoves);
+    }
+  };
+
+  const handleMovePiece = (to: Position): void => {
+    if (selectedPiecePosition) {
+      game.movePiece(selectedPiecePosition, to);
+      setSelectedPiecePosition(null);
+      setValidMoves([]);
+    }
   };
 
   const isValidTile = (row: number, col: number): boolean => {
     return !!validMoves.find(m => m[0] === row && m[1] === col);
+  };
+
+  const isEmpty = (row: number, col: number) => {
+    return !game.board[row][col];
   };
 
   return (
@@ -60,8 +81,10 @@ const Board: React.FC<Props> = ({ game }: Props) => {
                   game={game}
                   row={row}
                   col={col}
-                  valid={isValidTile(row, col)}
+                  isEmpty={isEmpty(row, col)}
+                  isValid={isValidTile(row, col)}
                   handleTileClick={handleTileClick}
+                  handleMovePiece={handleMovePiece}
                 >
                   {getPiece(row, col)}
                 </Tile>

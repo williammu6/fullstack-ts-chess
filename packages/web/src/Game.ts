@@ -1,4 +1,5 @@
 import { PieceType } from "./types/PieceType";
+import {Position} from "./types/Position";
 
 type Piece = {
   type: PieceType;
@@ -7,7 +8,7 @@ type Piece = {
 };
 
 export class Game {
-  board: Piece[][] = [];
+  board: (Piece|null)[][] = [];
 
   newGame = (): void => {
     this.board = [
@@ -30,13 +31,11 @@ export class Game {
     ] as Piece[][];
   };
 
-  getPiece = (row: number, col: number): Piece => {
+  getPiece = (row: number, col: number): Piece | null => {
     return this.board[row][col];
   };
 
-  getValidPawnMoves = (row: number, col: number): number[][] => {
-    const piece = this.getPiece(row, col);
-
+  getValidPawnMoves = (piece: Piece, row: number, col: number): number[][] => {
     const direction = piece.color === "black" ? -1 : 1;
 
     let validMoves = [];
@@ -44,10 +43,10 @@ export class Game {
     if (!this.getPiece(row - direction, col))
       validMoves.push([row - direction, col]);
 
-    if (this.getPiece(row - direction, col + 1))
+    if (col !== 7 && this.getPiece(row - direction, col + 1))
       validMoves.push([row - direction, col + 1]);
 
-    if (this.getPiece(row - direction, col - 1))
+    if (col !== 0 && this.getPiece(row - direction, col - 1))
       validMoves.push([row - direction, col - 1]);
 
     if (!piece.moved) {
@@ -58,14 +57,16 @@ export class Game {
     return validMoves;
   };
 
-  getValidMoves = (row: number, col: number) => {
-    const piece: Piece = this.board[row][col];
+  movePiece = (from: Position, to: Position) => {
+    this.board[from.row][from.col]!.moved = true;
+    this.board[to.row][to.col] = this.board[from.row][from.col];
+    this.board[from.row][from.col] = null;
+  };
 
-    if (!piece) return [];
-
+  getValidMoves = (piece: Piece, row: number, col: number) => {
     switch (piece.type) {
       case PieceType.PAWN:
-        return this.getValidPawnMoves(row, col);
+        return this.getValidPawnMoves(piece, row, col);
       default:
         return [];
     }

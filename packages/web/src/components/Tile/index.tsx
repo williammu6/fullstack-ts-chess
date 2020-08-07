@@ -2,40 +2,50 @@ import React, { ReactNode } from "react";
 import clsx from "clsx";
 import { Game } from "../../Game";
 
+import { Position } from "../../types/Position";
+
 interface Props {
   col: number;
   row: number;
   game: Game;
-  valid: boolean;
+  isValid: boolean;
+  isEmpty: boolean;
   children?: ReactNode;
   handleTileClick(row: number, col: number): void;
+  handleMovePiece(to: Position): void;
 }
 
 const Tile: React.FC<Props> = ({
-  game,
-  valid,
+  isValid,
+  isEmpty,
   col,
   row,
   children,
-  handleTileClick
+  handleTileClick,
+  handleMovePiece
 }: Props) => {
   const isDark = (row: number, col: number) => {
     return (row + col) % 2 === 1;
   };
 
   const getBackground = (): string => {
-    if (valid) {
+    if (isValid) {
       return "bg-green-300";
     }
     return isDark(row, col) ? "bg-gray-600" : "bg-white";
   };
 
-  const isEmpty = () => {
-    return !game.board[row][col];
-  };
 
   const isClickable = (): boolean => {
-    return !isEmpty() || valid;
+    return !isEmpty || isValid;
+  };
+
+  const handleClick = () => {
+    if (isValid) {
+      handleMovePiece({ row, col });
+    } else {
+      handleTileClick(row, col);
+    }
   };
 
   return (
@@ -45,7 +55,7 @@ const Tile: React.FC<Props> = ({
         isClickable() && "cursor-pointer",
         getBackground()
       )}
-      onClick={() => handleTileClick(row, col)}
+      onClick={handleClick}
     >
       {children}
     </div>
