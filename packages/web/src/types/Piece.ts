@@ -1,3 +1,6 @@
+export type PieceColor = "black" | "white";
+
+
 export enum PieceTypes {
   PAWN = 'pawn',
   KNIGHT = 'knight',
@@ -8,7 +11,7 @@ export enum PieceTypes {
 };
 
 export interface IPiece {
-  color: "black" | "white",
+  color: PieceColor,
   type: PieceTypes,
   moved: boolean,
   char: string,

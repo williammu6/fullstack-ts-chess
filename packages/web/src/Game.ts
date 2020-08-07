@@ -1,11 +1,14 @@
 import { Position } from "./types/Position";
-import { IPiece, PieceTypes } from "./types/Piece";
+import { IPiece, PieceTypes, PieceColor } from "./types/Piece";
 import { getInitialPosition } from "./utils/board";
 
 export class Game {
+  turn: PieceColor = "white";
+
   board: (IPiece | null)[][] = [];
 
   newGame = (): void => {
+    this.turn = "white";
     this.board = getInitialPosition();
   };
 
@@ -35,15 +38,14 @@ export class Game {
     return validMoves;
   };
 
-  movePiece = (from: Position, to: Position) => {
-    let piece = this.board[from.row][from.col]
-    if (piece) {
-      piece.moved = true;
-      this.board[from.row][from.col] = null;
-      this.board[to.row][to.col] = piece;
+  getTurn = (): PieceColor => this.turn;
 
-      console.log(piece);
-    }
+  movePiece = (from: Position, to: Position) => {
+    let movedPiece = this.board[from.row][from.col];
+    movedPiece!.moved = true;
+    this.board[to.row][to.col] = movedPiece;
+    this.board[from.row][from.col] = null;
+    this.turn = this.turn === "white" ? "black" : "white";
   };
 
   getValidMoves = (piece: IPiece, row: number, col: number) => {
@@ -56,7 +58,7 @@ export class Game {
   };
 
   constructor() {
-    console.log("constructor")
+    console.log("constructor");
     this.newGame();
   }
 }

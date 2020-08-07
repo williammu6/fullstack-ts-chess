@@ -1,5 +1,5 @@
-import {charPieces} from "../Constants";
-import {IPiece, PieceTypes} from "../types/Piece";
+import { charPieces } from "../Constants";
+import { IPiece, PieceTypes } from "../types/Piece";
 
 const piecesOrder: string[] = [
   "ROOK",
@@ -36,13 +36,12 @@ const getRowPawns = (color: "black" | "white"): IPiece[] => {
 };
 
 export const getInitialPosition = (): (IPiece | null)[][] => {
-  console.log("build board");
   let board: (IPiece | null)[][] = [];
+
+  const emptyRow = Array.from({ length: 8 }, () => null);
 
   board.push(getRowMajorPieces("black"));
   board.push(getRowPawns("black"));
-
-  const emptyRow = Array.from({ length: 8 }, () => null);
 
   board.push(emptyRow);
   board.push(emptyRow);

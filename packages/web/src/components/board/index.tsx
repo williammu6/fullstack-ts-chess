@@ -24,7 +24,7 @@ const Board: React.FC<Props> = ({ game }: Props) => {
 
   const handleTileClick = (row: number, col: number) => {
     const piece = game.getPiece(row, col);
-    if (piece) {
+    if (piece && piece.color === game.getTurn()) {
       setSelectedPiecePosition({ row, col });
       const validMoves = game.getValidMoves(piece, row, col);
       setValidMoves(validMoves);
@@ -47,6 +47,13 @@ const Board: React.FC<Props> = ({ game }: Props) => {
     return !game.board[row][col];
   };
 
+  const getPiece = (row: number, col: number) => {
+    const piece = game.getPiece(row, col);
+    return (
+      <Piece piece={piece} />
+    )
+  }
+
   return (
       <div className="flex">
         <div className="border-solid border-4 border-gray-700 board">
@@ -65,7 +72,7 @@ const Board: React.FC<Props> = ({ game }: Props) => {
                   handleTileClick={handleTileClick}
                   handleMovePiece={handleMovePiece}
                 >
-                  <Piece piece={ game.board[row][col] } />
+                  { getPiece(row, col) }
                 </Tile>
               ))}
             </div>
