@@ -1,5 +1,7 @@
 # Fullstack Typescript Chess
 
+Work in progress 😁
+
 ## My goals
 
 - Improve ReactJS (typescript) skills
@@ -11,4 +13,4 @@
 - Drag n' Drop pieces
 - Multiplayer
 - Develop server side of the application
-- Validate moves both on fronend and backend
+- Validate moves both on frontend and backend
