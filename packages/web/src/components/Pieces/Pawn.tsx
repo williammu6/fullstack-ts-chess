@@ -1,36 +1,21 @@
-import React from "react";
+import React, { ReactNode } from "react";
+import { pieceString } from "../../Constants";
 
-import { DragPreviewImage, useDrag } from "react-dnd";
+type Props = {
+  color: string;
+  children?: ReactNode;
+};
 
-const pawnImage = "w_pawn.png";
-
-const pawnStyle: React.CSSProperties = {
-  fontSize: 40,
-  fontWeight: 'bold',
-  cursor: 'move',
-}
-
-const Pawn = () => {
-  const [{ isDragging }, drag, preview] = useDrag({
-    item: { type: 'pawn'},
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
-  })
-
+const Pawn: React.FC<Props> = ({ color }: Props) => {
+  const style = {
+    fontSize: "4rem"
+  };
   return (
-    <>
-      <DragPreviewImage connect={preview} src={pawnImage} />
-      <div
-        ref={drag}
-        style={{
-          ...pawnStyle,
-          opacity: isDragging ? 0 : 1,
-        }}
-      >
-        <img src={pawnImage} alt="pawn" />
-      </div>
-    </>
+    <div className="flex items-center content-center justify-center">
+      <span style={style}>
+        {color === "black" ? pieceString.BLACK_PAWN : pieceString.WHITE_PAWN}
+      </span>
+    </div>
   );
 };
 

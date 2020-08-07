@@ -4,8 +4,11 @@
     "packages/*"
   ],
   "scripts": {
-    "start": "lerna run start",
-    "build": "lerna run build"
+    "build": "lerna run build",
+    "start": "lerna run --parallel start",
+    "start2": "yarn workspaces run start",
+    "watch": "lerna run watch --stream",
+    "tsc": "lerna run tsc --stream"
   },
   "devDependencies": {
     "lerna": "^3.22.1",
