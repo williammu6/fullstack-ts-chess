@@ -54,8 +54,8 @@ const Board: React.FC<Props> = ({ game }: Props) => {
             <div key={row} className="flex flex-row row">
               {Array.from({ length: 8 }).map((_, col) => (
                 <Tile
-                  yLegend={col === 0 ? letters[row] : null}
-                  xLegend={row === 7 ? col + 1 : null}
+                  xLegend={row === 7 ? letters[col] : null}
+                  yLegend={col === 0 ? row + 1 : null}
                   game={game}
                   key={col}
                   row={row}
