@@ -1,15 +1,13 @@
 import React, { ReactNode, useState } from "react";
 
-import { PieceType } from "../../types/PieceType";
 import {Position} from "../../types/Position";
 
 import Tile from "../Tile";
 
-import Pawn from "../Pieces/Pawn";
-
 import { Game } from "../../Game";
 
 import "./styles.css";
+import Piece from "../Piece";
 
 type Props = {
   game: Game;
@@ -22,20 +20,6 @@ const Board: React.FC<Props> = ({ game }: Props) => {
   const [selectedPiecePosition, setSelectedPiecePosition] = useState<Position | null>();
 
   const letters = ["A", "B", "C", "D", "E", "F", "G", "H"];
-
-  const getPiece = (row: number, col: number) => {
-    const piece = game.getPiece(row, col);
-
-    if (piece) {
-      switch (piece.type) {
-        case PieceType.PAWN:
-          return <Pawn color={piece.color} />;
-        default:
-          return null;
-      }
-    }
-    return null;
-  };
 
   const handleTileClick = (row: number, col: number) => {
     const piece = game.getPiece(row, col);
@@ -73,6 +57,7 @@ const Board: React.FC<Props> = ({ game }: Props) => {
           ))}
         </div>
         <div className="border-solid border-4 border-gray-700 board">
+
           {Array.from({ length: 8 }).map((_, row) => (
             <div key={row} className="flex flex-row row">
               {Array.from({ length: 8 }).map((_, col) => (
@@ -86,7 +71,7 @@ const Board: React.FC<Props> = ({ game }: Props) => {
                   handleTileClick={handleTileClick}
                   handleMovePiece={handleMovePiece}
                 >
-                  {getPiece(row, col)}
+                  <Piece piece={game.getPiece(row, col)} />
                 </Tile>
               ))}
             </div>

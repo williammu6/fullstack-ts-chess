@@ -1,41 +1,19 @@
-import { PieceType } from "./types/PieceType";
-import {Position} from "./types/Position";
-
-type Piece = {
-  type: PieceType;
-  color: "black" | "white";
-  moved: boolean;
-};
+import { Position } from "./types/Position";
+import { charPieces, getInitialPosition } from "./Constants";
+import { IPiece, PieceTypes } from "./types/Piece";
 
 export class Game {
-  board: (Piece|null)[][] = [];
+  board: (IPiece | null)[][] = [];
 
   newGame = (): void => {
-    this.board = [
-      Array.from({ length: 8 }),
-      Array.from({ length: 8 }, () => ({
-        type: PieceType.PAWN,
-        color: "black",
-        moved: false
-      })),
-      Array.from({ length: 8 }),
-      Array.from({ length: 8 }),
-      Array.from({ length: 8 }),
-      Array.from({ length: 8 }),
-      Array.from({ length: 8 }, () => ({
-        type: PieceType.PAWN,
-        color: "white",
-        moved: false
-      })),
-      Array.from({ length: 8 })
-    ] as Piece[][];
+    this.board = getInitialPosition();
   };
 
-  getPiece = (row: number, col: number): Piece | null => {
+  getPiece = (row: number, col: number): IPiece | null => {
     return this.board[row][col];
   };
 
-  getValidPawnMoves = (piece: Piece, row: number, col: number): number[][] => {
+  getValidPawnMoves = (piece: IPiece, row: number, col: number): number[][] => {
     const direction = piece.color === "black" ? -1 : 1;
 
     let validMoves = [];
@@ -50,8 +28,8 @@ export class Game {
       validMoves.push([row - direction, col - 1]);
 
     if (!piece.moved) {
-      if (!this.getPiece(row - (direction * 2), col))
-        validMoves.push([row - (direction * 2), col]);
+      if (!this.getPiece(row - direction * 2, col))
+        validMoves.push([row - direction * 2, col]);
     }
 
     return validMoves;
@@ -63,9 +41,9 @@ export class Game {
     this.board[from.row][from.col] = null;
   };
 
-  getValidMoves = (piece: Piece, row: number, col: number) => {
+  getValidMoves = (piece: IPiece, row: number, col: number) => {
     switch (piece.type) {
-      case PieceType.PAWN:
+      case PieceTypes.PAWN:
         return this.getValidPawnMoves(piece, row, col);
       default:
         return [];
