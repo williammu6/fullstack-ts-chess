@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from "react";
 
-import {Position} from "../../types/Position";
+import { Position } from "../../types/Position";
 
 import Tile from "../Tile";
 
@@ -18,7 +18,10 @@ type Props = {
 const Board: React.FC<Props> = ({ game }: Props) => {
   const [validMoves, setValidMoves] = useState<number[][]>([]);
 
-  const [selectedPiecePosition, setSelectedPiecePosition] = useState<Position | null>();
+  const [
+    selectedPiecePosition,
+    setSelectedPiecePosition
+  ] = useState<Position | null>();
 
   const letters = ["A", "B", "C", "D", "E", "F", "G", "H"];
 
@@ -49,34 +52,34 @@ const Board: React.FC<Props> = ({ game }: Props) => {
 
   const getPiece = (row: number, col: number) => {
     const piece = game.getPiece(row, col);
-    return (
-      <Piece piece={piece} />
-    )
-  }
+    if (piece)
+      return <Piece piece={piece} />;
+    return null;
+  };
 
   return (
-      <div className="flex">
-        <div className="border-solid border-4 border-gray-700 board">
-          {Array.from({ length: 8 }).map((_, row) => (
-            <div key={row} className="flex flex-row row">
-              {Array.from({ length: 8 }).map((_, col) => (
-                <Tile
-                  xLegend={row === 7 ? letters[col] : null}
-                  yLegend={col === 0 ? 8 - row : null}
-                  game={game}
-                  key={col}
-                  row={row}
-                  col={col}
-                  isEmpty={isEmpty(row, col)}
-                  isValid={isValidTile(row, col)}
-                  handleTileClick={handleTileClick}
-                  handleMovePiece={handleMovePiece}
-                >
-                  { getPiece(row, col) }
-                </Tile>
-              ))}
-            </div>
-          ))}
+    <div className="flex">
+      <div className="border-solid border-4 border-gray-700 board">
+        {Array.from({ length: 8 }).map((_, row) => (
+          <div key={row} className="flex flex-row row">
+            {Array.from({ length: 8 }).map((_, col) => (
+              <Tile
+                xLegend={row === 7 ? letters[col] : null}
+                yLegend={col === 0 ? 8 - row : null}
+                game={game}
+                key={col}
+                row={row}
+                col={col}
+                isEmpty={isEmpty(row, col)}
+                isValid={isValidTile(row, col)}
+                handleTileClick={handleTileClick}
+                handleMovePiece={handleMovePiece}
+              >
+                {getPiece(row, col)}
+              </Tile>
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   );

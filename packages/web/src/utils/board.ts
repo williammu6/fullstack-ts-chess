@@ -38,18 +38,17 @@ const getRowPawns = (color: "black" | "white"): IPiece[] => {
 export const getInitialPosition = (): (IPiece | null)[][] => {
   let board: (IPiece | null)[][] = [];
 
-  const emptyRow = Array.from({ length: 8 }, () => null);
-
   board.push(getRowMajorPieces("black"));
   board.push(getRowPawns("black"));
 
-  board.push(emptyRow);
-  board.push(emptyRow);
-  board.push(emptyRow);
-  board.push(emptyRow);
+  board.push(Array.from({ length: 8 }, () => null));
+  board.push(Array.from({ length: 8 }, () => null));
+  board.push(Array.from({ length: 8 }, () => null));
+  board.push(Array.from({ length: 8 }, () => null));
 
   board.push(getRowPawns("white"));
   board.push(getRowMajorPieces("white"));
 
   return board;
 };
+

@@ -2,6 +2,7 @@ import { Position } from "./types/Position";
 import { IPiece, PieceTypes, PieceColor } from "./types/Piece";
 import { getInitialPosition } from "./utils/board";
 
+
 export class Game {
   turn: PieceColor = "white";
 
