@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Board from "../../components/Board";
 
@@ -8,7 +8,11 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { Game } from "../../Game";
 
 const Play = () => {
-  const [game] = useState<Game | undefined>(new Game());
+  const [game, setGame] = useState<Game | undefined>();
+
+  useEffect(() => {
+    setGame(new Game());
+  }, []);
 
   return (
     <div className="flex items-center justify-center bg-gray-100 h-full">

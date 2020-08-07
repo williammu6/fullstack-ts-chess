@@ -1,6 +1,6 @@
 import { Position } from "./types/Position";
-import { charPieces, getInitialPosition } from "./Constants";
 import { IPiece, PieceTypes } from "./types/Piece";
+import { getInitialPosition } from "./utils/board";
 
 export class Game {
   board: (IPiece | null)[][] = [];
@@ -36,9 +36,14 @@ export class Game {
   };
 
   movePiece = (from: Position, to: Position) => {
-    this.board[from.row][from.col]!.moved = true;
-    this.board[to.row][to.col] = this.board[from.row][from.col];
-    this.board[from.row][from.col] = null;
+    let piece = this.board[from.row][from.col]
+    if (piece) {
+      piece.moved = true;
+      this.board[from.row][from.col] = null;
+      this.board[to.row][to.col] = piece;
+
+      console.log(piece);
+    }
   };
 
   getValidMoves = (piece: IPiece, row: number, col: number) => {
@@ -51,6 +56,7 @@ export class Game {
   };
 
   constructor() {
+    console.log("constructor")
     this.newGame();
   }
 }

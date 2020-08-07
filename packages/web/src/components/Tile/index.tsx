@@ -7,6 +7,8 @@ import { Position } from "../../types/Position";
 interface Props {
   col: number;
   row: number;
+  xLegend: number | null;
+  yLegend: string | null;
   game: Game;
   isValid: boolean;
   isEmpty: boolean;
@@ -15,7 +17,27 @@ interface Props {
   handleMovePiece(to: Position): void;
 }
 
+const legendFont: React.CSSProperties = {
+  fontSize: '0.8rem',
+  fontWeight: 'bold',
+};
+
+const styleYLegend: React.CSSProperties = {
+  position: 'absolute',
+  top: '4px',
+  left: '4px',
+  zIndex:5,
+};
+const styleXLegend: React.CSSProperties = {
+  position: 'absolute',
+  bottom: '4px',
+  right: '4px',
+  zIndex:5
+};
+
 const Tile: React.FC<Props> = ({
+  xLegend,
+  yLegend,
   isValid,
   isEmpty,
   col,
@@ -58,6 +80,8 @@ const Tile: React.FC<Props> = ({
       onClick={handleClick}
     >
       {children}
+      <span style={{...styleYLegend, ...legendFont}}>{yLegend}</span>
+      <span style={{...styleXLegend, ...legendFont}}>{xLegend}</span>
     </div>
   );
 };
