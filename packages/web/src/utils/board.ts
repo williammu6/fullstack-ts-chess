@@ -12,7 +12,7 @@ const piecesOrder: string[] = [
   "ROOK"
 ];
 
-const getRowMajorPieces = (color: "black" | "white") => {
+const getRowPieces = (color: "black" | "white") => {
   let row = [];
   for (const piece of piecesOrder) {
     const p: PieceType = {
@@ -38,7 +38,7 @@ const getRowPawns = (color: "black" | "white"): PieceType[] => {
 export const getInitialPosition = (): (PieceType | null)[][] => {
   let board: (PieceType | null)[][] = [];
 
-  board.push(getRowMajorPieces("black"));
+  board.push(getRowPieces("black"));
   board.push(getRowPawns("black"));
 
   board.push(Array.from({ length: 8 }, () => null));
@@ -47,7 +47,7 @@ export const getInitialPosition = (): (PieceType | null)[][] => {
   board.push(Array.from({ length: 8 }, () => null));
 
   board.push(getRowPawns("white"));
-  board.push(getRowMajorPieces("white"));
+  board.push(getRowPieces("white"));
 
   return board;
 };

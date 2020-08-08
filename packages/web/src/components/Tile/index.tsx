@@ -20,7 +20,9 @@ interface Props {
 
 const legendFont: React.CSSProperties = {
   fontSize: "0.8rem",
-  fontWeight: "bold"
+  fontWeight: "bold",
+  MozUserSelect: "none",
+  WebkitUserSelect: "none"
 };
 
 const styleXLegend: React.CSSProperties = {
@@ -47,7 +49,6 @@ const Tile: React.FC<Props> = ({
   handleTileClick,
   handleMovePiece
 }: Props) => {
-
   const isDark = (row: number, col: number) => {
     return (row + col) % 2 === 1;
   };
@@ -71,14 +72,14 @@ const Tile: React.FC<Props> = ({
   return (
     <div
       className={clsx(
-        "relative flex-1",
+        "relative flex-1 unselectable",
         getBackground(),
         isClickable() && "cursor-pointer"
       )}
       onClick={handleClick}
     >
       {children}
-      {isValid && <Overlay /> }
+      {isValid && <Overlay />}
       <span style={{ ...styleYLegend, ...legendFont }}>{yLegend}</span>
       <span style={{ ...styleXLegend, ...legendFont }}>{xLegend}</span>
     </div>
