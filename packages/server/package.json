@@ -1,0 +1,16 @@
+{
+  "name": "@fullstack-ts-chess/server",
+  "version": "0.1.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node-dev src/index.ts --respawn"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.7",
+    "@types/node": "^14.0.27",
+    "express": "^4.17.1",
+    "ts-node": "^8.10.2",
+    "ts-node-dev": "^1.0.0-pre.56"
+  }
+}

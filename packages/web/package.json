@@ -19,7 +19,7 @@
   },
   "scripts": {
     "prestart": "npm run build:tailwind",
-    "start": "react-scripts start",
+    "start": "CI=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -41,7 +41,7 @@
     ]
   },
   "devDependencies": {
-    "@fullstack-ts-chess/common": "0.0.0",
+    "@fullstack-ts-chess/server": "0.1.0",
     "@types/react-router-dom": "^5.1.5",
     "@types/styled-components": "^5.1.2",
     "clsx": "^1.1.1",

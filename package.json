@@ -5,8 +5,7 @@
   ],
   "scripts": {
     "build": "lerna run build",
-    "start": "lerna run --parallel start",
-    "start2": "yarn workspaces run start",
+    "start": "lerna run start --parallel",
     "watch": "lerna run watch --stream",
     "tsc": "lerna run tsc --stream"
   },
