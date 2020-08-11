@@ -37,8 +37,6 @@ const startMatch = () => {
 };
 
 const handleMatchmaking = (s: io.Socket) => {
-  console.log("Connected");
-
   players.push(s);
 
   const payload = {
@@ -60,13 +58,13 @@ socket.on("connection", (s: io.Socket) => {
 
   socket.on("move", handleMove);
 
+  socket.on("disconnect", () => {
+    console.log("Disconnected", s.id);
+
+    players = players.filter(p => p.id !== s.id);
+  });
 });
 
-socket.on("disconnect", (s: io.Socket) => {
-  console.log("Disconnected", s.id);
-
-  players = players.filter(p => p.id !== s.id);
-});
 
 server.listen(process.env.PORT || 8889, () => {
   console.log(`Server started on port ${server.address()} :)`);

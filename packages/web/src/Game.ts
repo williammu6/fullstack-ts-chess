@@ -5,6 +5,8 @@ import io from "socket.io-client";
 
 let socket = io.connect("http://localhost:8889");
 
+export { socket };
+
 type MatchmakingInfo = {
   // Move to common
   id: string;
@@ -19,15 +21,16 @@ class Player {
 
   constructor() {
     socket.on("info", (payload: MatchmakingInfo) => {
+      console.log(payload);
       this.id = payload.id;
       this.color = payload.color;
-
-      console.log(payload);
     });
   }
 }
 
 export class Game {
+
+  id: number = -1;
 
   player: Player | null = null;
 
@@ -35,9 +38,17 @@ export class Game {
 
   board: (PieceType | null)[][] = [];
 
+  opponent: string | null = null;
+
   findGame = async () => {
     this.player = new Player();
     this.board = getInitialPosition();
+
+    socket.on("new_match", (payload: any) => {
+      console.log(payload);
+      this.id = payload.id;
+      this.opponent = payload.opponent;
+    });
   };
 
   getPiece = (row: number, col: number): PieceType | null => {
