@@ -1,14 +1,42 @@
 import { Position } from "./types/Position";
 import { PieceType, PieceName, PieceColor } from "./types/Piece";
 import { getInitialPosition } from "./utils/board";
+import io from "socket.io-client";
+
+let socket = io.connect("http://localhost:8889");
+
+type MatchmakingInfo = {
+  // Move to common
+  id: string;
+  color: PieceColor;
+};
+
+class Player {
+
+  id: string = "";
+
+  color: PieceColor = "white";
+
+  constructor() {
+    socket.on("info", (payload: MatchmakingInfo) => {
+      this.id = payload.id;
+      this.color = payload.color;
+
+      console.log(payload);
+    });
+  }
+}
 
 export class Game {
-  turn: PieceColor = "black";
+
+  player: Player | null = null;
+
+  turn: PieceColor = "white";
 
   board: (PieceType | null)[][] = [];
 
-  newGame = (): void => {
-    this.turn = "white";
+  findGame = async () => {
+    this.player = new Player();
     this.board = getInitialPosition();
   };
 
@@ -145,7 +173,7 @@ export class Game {
       { row: row + 2, col: col + 1 },
       { row: row + 2, col: col - 1 },
       { row: row - 2, col: col + 1 },
-      { row: row - 2, col: col - 1 },
+      { row: row - 2, col: col - 1 }
     ];
 
     let validMoves = [];
@@ -187,6 +215,6 @@ export class Game {
   };
 
   constructor() {
-    this.newGame();
+    this.findGame();
   }
 }
