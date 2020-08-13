@@ -1,19 +1,32 @@
 {
   "compilerOptions": {
-    "sourceMap": true,
-    "removeComments": true,
-
-    "strict": true,
+    "lib": ["dom", "es6", "es7"],
+    "target": "es6",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "jsx": "react",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitReturns": true,
     "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
     "noImplicitThis": true,
-    "alwaysStrict": true,
-
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true,
+    "noEmitOnError": true,
+    "typeRoots": ["node_modules/@types"],
     "noFallthroughCasesInSwitch": true,
-    "typeRoots": ["node_modules/@types"]
-  }
+    "strictNullChecks": true,
+    "experimentalDecorators": true,
+    "preserveConstEnums": true,
+    "strict": true,
+    "alwaysStrict": true,
+    "pretty": true,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "noEmitHelpers": true,
+    "importHelpers": true
+  },
+  "exclude": ["**/dist", "**/build", "node_modules"],
+  "compileOnSave": true
 }

@@ -1,9 +1,8 @@
 import React, { ReactNode } from "react";
 import clsx from "clsx";
-import { Game } from "../../Game";
-
-import { Position } from "../../types/Position";
 import Overlay from "../Overlay";
+import {Game} from 'src/classes/Game';
+import {Position} from '@fullstack-ts-chess/shared';
 
 interface Props {
   col: number;

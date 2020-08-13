@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { PieceType } from "../../types/Piece";
+import { PieceType } from "@fullstack-ts-chess/shared";
 
 type Props = {
   piece: PieceType;

@@ -1,12 +1,11 @@
 import React, { ReactNode, useState } from "react";
 
-import { Position } from "../../types/Position";
-
 import Tile from "../Tile";
 
-import { Game } from "../../Game";
-
 import Piece from "../Piece";
+
+import { Game } from "src/classes/Game";
+import { Position } from "@fullstack-ts-chess/shared";
 
 import "./styles.css";
 
@@ -52,8 +51,7 @@ const Board: React.FC<Props> = ({ game }: Props) => {
 
   const getPiece = (row: number, col: number) => {
     const piece = game.getPiece(row, col);
-    if (piece)
-      return <Piece piece={piece} />;
+    if (piece) return <Piece piece={piece} />;
     return null;
   };
 

@@ -1,35 +1,13 @@
-import { Position } from "./types/Position";
-import { PieceType, PieceName, PieceColor } from "./types/Piece";
-import { getInitialPosition } from "./utils/board";
-import io from "socket.io-client";
-
-let socket = io.connect("http://localhost:8889");
-
-export { socket };
-
-type MatchmakingInfo = {
-  // Move to common
-  id: string;
-  color: PieceColor;
-};
-
-class Player {
-
-  id: string = "";
-
-  color: PieceColor = "white";
-
-  constructor() {
-    socket.on("info", (payload: MatchmakingInfo) => {
-      console.log(payload);
-      this.id = payload.id;
-      this.color = payload.color;
-    });
-  }
-}
+import { getInitialPosition } from "../utils/board";
+import {
+  PieceColor,
+  PieceType,
+  Player,
+  PieceName,
+  Position,
+} from "@fullstack-ts-chess/shared";
 
 export class Game {
-
   id: number = -1;
 
   player: Player | null = null;
@@ -39,17 +17,6 @@ export class Game {
   board: (PieceType | null)[][] = [];
 
   opponent: string | null = null;
-
-  findGame = async () => {
-    this.player = new Player();
-    this.board = getInitialPosition();
-
-    socket.on("new_match", (payload: any) => {
-      console.log(payload);
-      this.id = payload.id;
-      this.opponent = payload.opponent;
-    });
-  };
 
   getPiece = (row: number, col: number): PieceType | null => {
     return this.board[row][col];
@@ -206,6 +173,7 @@ export class Game {
     this.board[to.row][to.col] = movedPiece;
     this.board[from.row][from.col] = null;
     // this.turn = this.turn === "white" ? "black" : "white";
+    console.log("move piece");
   };
 
   getValidMoves = (piece: PieceType, row: number, col: number) => {
@@ -226,6 +194,6 @@ export class Game {
   };
 
   constructor() {
-    this.findGame();
+    this.board = getInitialPosition();
   }
 }

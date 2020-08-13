@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "src/*": ["src/*"],
+      "@fullstack-ts-chess/shared/*": ["../shared/src/*"]
+    }
+  },
+  "references": [
+    { "path": "../shared" }
+  ]
+}
