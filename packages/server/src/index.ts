@@ -31,7 +31,7 @@ const startGame = () => {
     blackPlayer: blackPlayer.id
   };
 
-  whitePlayer.emit("match_found", JSON.stringify(match));
+  whitePlayer.emit("match_found", match);
   blackPlayer.emit("match_found", match);
 
   matches[id] = match;

@@ -14,7 +14,7 @@ const Play = () => {
   const startGame = async () => {
     const socket = new SocketClient();
     const match = await socket.findMatch();
-    console.log({ match });
+    console.log(match);
     setGame(new Game());
   };
 
