@@ -1,11 +1,14 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 
 import Tile from "../Tile";
 
 import Piece from "../Piece";
 
 import { Game } from "src/classes/Game";
-import { Position } from "@fullstack-ts-chess/shared";
+
+import { Position, Move } from "@fullstack-ts-chess/shared";
+
+import { socket } from "src/utils/socketUtil";
 
 import "./styles.css";
 
@@ -17,6 +20,19 @@ type Props = {
 const Board: React.FC<Props> = ({ game }: Props) => {
   const [validMoves, setValidMoves] = useState<number[][]>([]);
 
+  const [board, setBoard] = useState(game.board);
+
+  const updateBoard = ({ from, to }: Move) => {
+    setBoard(() => {
+      const newBoard = game.updateBoard(from, to);
+      return [...newBoard];
+    });
+  };
+
+  useEffect(() => {
+    socket.on("update_board", updateBoard);
+  });
+
   const [
     selectedPiecePosition,
     setSelectedPiecePosition
@@ -26,7 +42,9 @@ const Board: React.FC<Props> = ({ game }: Props) => {
 
   const handleTileClick = (row: number, col: number) => {
     const piece = game.getPiece(row, col);
-    if (piece /*&& piece.color === game.getTurn() */) {
+    if (game.player.color === "black")
+      row = 7 - row;
+    if (piece && game.canSelectPiece(piece)) {
       setSelectedPiecePosition({ row, col });
       const validMoves = game.getValidMoves(piece, row, col);
       setValidMoves(validMoves);
@@ -58,9 +76,11 @@ const Board: React.FC<Props> = ({ game }: Props) => {
   return (
     <div className="flex">
       <div className="border-solid border-4 border-gray-700 board">
-        {Array.from({ length: 8 }).map((_, row) => (
+        <p>Player: {game.player.color.toString()}</p>
+        <p>Turn: {game.getTurn().toString()}</p>
+        {board.map((rows, row) => (
           <div key={row} className="flex flex-row row">
-            {Array.from({ length: 8 }).map((_, col) => (
+            {rows.map((_, col) => (
               <Tile
                 xLegend={row === 7 ? letters[col] : null}
                 yLegend={col === 0 ? 8 - row : null}

@@ -3,7 +3,7 @@ import http from "http";
 import cors from "cors";
 import io from "socket.io";
 
-import { Match } from "@fullstack-ts-chess/shared";
+import { Match, Move, Player } from "@fullstack-ts-chess/shared";
 
 const app: express.Application = express();
 
@@ -20,19 +20,22 @@ let matches: { [match_id: number]: Match } = {};
 const startGame = () => {
   let lQueue = queuePlayers.length;
 
-  let whitePlayer: io.Socket = queuePlayers[lQueue - 2];
-  let blackPlayer: io.Socket = queuePlayers[lQueue - 1];
+  let white: io.Socket = queuePlayers[lQueue - 2];
+  let black: io.Socket = queuePlayers[lQueue - 1];
 
   const id: number = Math.floor(Math.random() * 1e4) + 1;
 
+  let blackPlayer = new Player(black.id, "black");
+  let whitePlayer = new Player(white.id, "white");
+
   let match: Match = {
     id,
-    whitePlayer: whitePlayer.id,
-    blackPlayer: blackPlayer.id
+    whitePlayer,
+    blackPlayer
   };
 
-  whitePlayer.emit("match_found", match);
-  blackPlayer.emit("match_found", match);
+  white.emit("game_found", { player: whitePlayer, match });
+  black.emit("game_found", { player: blackPlayer, match });
 
   matches[id] = match;
 };
@@ -40,7 +43,10 @@ const startGame = () => {
 const findMatch = (s: io.Socket) => {
   queuePlayers.push(s);
 
-  console.log(queuePlayers.map(p => p.id), queuePlayers.length);
+  console.log(
+    queuePlayers.map(p => p.id),
+    queuePlayers.length
+  );
 
   if (queuePlayers.length % 2 === 0) {
     console.log("Starting game");
@@ -48,16 +54,40 @@ const findMatch = (s: io.Socket) => {
   }
 };
 
+const getSocketByPlayer = (player: Player): io.Socket => {
+  const socket = connectedPlayers.find(p => p.id === player.id);
+
+  if (socket) return socket;
+
+  throw new Error("Player's socket not found.");
+};
+
+const handleMovePiece = (move: Move) => {
+  const turn = move.turn;
+
+  let player: io.Socket;
+
+  if (turn === "white") {
+    player = getSocketByPlayer(move.match.blackPlayer);
+  } else {
+    player = getSocketByPlayer(move.match.whitePlayer);
+  }
+
+  player.emit("update_board", move);
+};
+
 socket.on("connection", (s: io.Socket) => {
   console.log(`New connection... ${s.id}`);
   connectedPlayers.push(s);
 
-  s.on("find_match", () => {
+  s.on("find_game", () => {
     findMatch(s);
   });
 
+  s.on("move_piece", handleMovePiece);
+
   s.on("disconnect", () => {
-    console.log("A user disconnected");
+    console.log(`User ${s.id} disconnected`);
     connectedPlayers = connectedPlayers.filter(p => p.id !== s.id);
     queuePlayers = queuePlayers.filter(p => p.id !== s.id);
   });

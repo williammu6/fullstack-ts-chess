@@ -2,24 +2,32 @@ import { getInitialPosition } from "../utils/board";
 import {
   PieceColor,
   PieceType,
-  Player,
   PieceName,
   Position,
+  Match,
+  Move,
+  Player
 } from "@fullstack-ts-chess/shared";
+import { socket } from "src/utils/socketUtil";
 
 export class Game {
-  id: number = -1;
+  player: Player;
 
-  player: Player | null = null;
+  match: Match;
 
   turn: PieceColor = "white";
 
   board: (PieceType | null)[][] = [];
 
-  opponent: string | null = null;
-
   getPiece = (row: number, col: number): PieceType | null => {
+    if (this.player.color === "black")
+      row = 7 - row;
     return this.board[row][col];
+  };
+
+  canSelectPiece = (piece: PieceType | null) => {
+    if (!piece) return false;
+    return piece.color === this.turn && piece.color === this.player.color;
   };
 
   isInsideBoard = (row: number, col: number): boolean => {
@@ -167,33 +175,74 @@ export class Game {
 
   getTurn = (): PieceColor => this.turn;
 
-  movePiece = (from: Position, to: Position) => {
+  updateBoard = (from: Position, to: Position) => {
     let movedPiece = this.board[from.row][from.col];
-    movedPiece!.moved = true;
-    this.board[to.row][to.col] = movedPiece;
-    this.board[from.row][from.col] = null;
-    // this.turn = this.turn === "white" ? "black" : "white";
-    console.log("move piece");
+
+    if (movedPiece) {
+      movedPiece.moved = true;
+      this.board[to.row][to.col] = movedPiece;
+      this.board[from.row][from.col] = null;
+
+      this.turn = this.turn === "white" ? "black" : "white";
+    }
+
+    return this.board;
+  };
+
+  movePiece = (from: Position, to: Position) => {
+    if (this.turn !== this.player.color) return;
+
+    if (this.player.color === "black")
+      to.row = 7 - to.row;
+
+    socket.emit("move_piece", {
+      match: this.match,
+      turn: this.turn,
+      from,
+      to
+    });
+
+    this.updateBoard(from, to);
   };
 
   getValidMoves = (piece: PieceType, row: number, col: number) => {
+    let validMoves = [];
     switch (piece.name) {
       case PieceName.PAWN:
-        return this.getValidPawnMoves(piece, row, col);
+        validMoves = this.getValidPawnMoves(piece, row, col);
+        break;
       case PieceName.BISHOP:
-        return this.getValidBishopMoves(piece, row, col);
+        validMoves = this.getValidBishopMoves(piece, row, col);
+        break;
       case PieceName.QUEEN:
-        return this.getValidQueenMoves(piece, row, col);
+        validMoves = this.getValidQueenMoves(piece, row, col);
+        break;
       case PieceName.ROOK:
-        return this.getValidRookMoves(piece, row, col);
+        validMoves = this.getValidRookMoves(piece, row, col);
+      break;
       case PieceName.KNIGHT:
-        return this.getValidKnightMoves(piece, row, col);
+         validMoves = this.getValidKnightMoves(piece, row, col);
+      break;
       default:
         return [];
     }
+
+
+    if (this.player.color === "black") {
+      validMoves = validMoves.map(m => {
+        return [7 - m[0], m[1]]
+      });
+    }
+    return validMoves;
   };
 
-  constructor() {
+  init() {
     this.board = getInitialPosition();
+  }
+
+  constructor(player: Player, match: Match) {
+    this.player = player;
+    this.match = match;
+    this.init();
   }
 }

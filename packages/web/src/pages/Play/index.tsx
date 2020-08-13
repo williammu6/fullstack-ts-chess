@@ -6,16 +6,22 @@ import { DndProvider } from "react-dnd";
 
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Game } from "src/classes/Game";
-import { SocketClient } from "src/utils/socketUtil";
+import { socket } from "src/utils/socketUtil";
+import { Match, Player } from "@fullstack-ts-chess/shared";
 
 const Play = () => {
   const [game, setGame] = useState<Game | undefined>();
 
-  const startGame = async () => {
-    const socket = new SocketClient();
-    const match = await socket.findMatch();
-    console.log(match);
-    setGame(new Game());
+  const startGame = () => {
+    socket.emit("find_game");
+
+    socket.on(
+      "game_found",
+      ({ player, match }: { player: Player; match: Match }) => {
+        console.log(player, match);
+        setGame(new Game(player, match));
+      }
+    );
   };
 
   useEffect(() => {
