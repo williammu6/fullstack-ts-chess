@@ -3,7 +3,7 @@ import http from "http";
 import cors from "cors";
 import io from "socket.io";
 
-import { Match, Move, Player } from "@fullstack-ts-chess/shared";
+import { Match, Move, Player, Position } from "@fullstack-ts-chess/shared";
 
 const app: express.Application = express();
 
@@ -62,10 +62,27 @@ const getSocketByPlayer = (player: Player): io.Socket => {
   throw new Error("Player's socket not found.");
 };
 
+const flipMove = ({from, to}: Move): { from: Position, to: Position } => {
+  from.row = 7 - from.row;
+  to.row = 7 - to.row;
+
+  from.col = 7 - from.col;
+  to.col = 7 - to.col;
+
+  return { from, to };
+}
+
 const handleMovePiece = (move: Move) => {
   const turn = move.turn;
 
   let player: io.Socket;
+
+  const flippedMove = flipMove(move);
+
+  move = {
+    ...move,
+    ...flippedMove
+  };
 
   if (turn === "white") {
     player = getSocketByPlayer(move.match.blackPlayer);

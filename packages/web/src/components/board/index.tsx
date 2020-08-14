@@ -38,12 +38,10 @@ const Board: React.FC<Props> = ({ game }: Props) => {
     setSelectedPiecePosition
   ] = useState<Position | null>();
 
-  const letters = ["A", "B", "C", "D", "E", "F", "G", "H"];
+  const letters = ["a", "b", "c", "d", "e", "f", "g", "h"];
 
   const handleTileClick = (row: number, col: number) => {
     const piece = game.getPiece(row, col);
-    if (game.player.color === "black")
-      row = 7 - row;
     if (piece && game.canSelectPiece(piece)) {
       setSelectedPiecePosition({ row, col });
       const validMoves = game.getValidMoves(piece, row, col);
@@ -73,20 +71,35 @@ const Board: React.FC<Props> = ({ game }: Props) => {
     return null;
   };
 
+  const getXLegend = (row: number, col: number) => {
+    if (row === 7) {
+      if (game.isPlayerBlack())
+        col = 7 - col;
+      return letters[col];
+    }
+    return null;
+  };
+  const getYLegend = (row: number, col: number) => {
+    if (col === 0) {
+      if (game.isPlayerBlack())
+        row = 7 - row;
+      return 8 - row;
+    }
+    return null;
+  };
+
   return (
     <div className="flex">
       <div className="border-solid border-4 border-gray-700 board">
-        <p>Player: {game.player.color.toString()}</p>
-        <p>Turn: {game.getTurn().toString()}</p>
         {board.map((rows, row) => (
           <div key={row} className="flex flex-row row">
             {rows.map((_, col) => (
               <Tile
-                xLegend={row === 7 ? letters[col] : null}
-                yLegend={col === 0 ? 8 - row : null}
-                game={game}
+                xLegend={getXLegend(row, col)}
+                yLegend={getYLegend(row, col)}
                 key={col}
                 row={row}
+                side={game.player.color}
                 col={col}
                 isEmpty={isEmpty(row, col)}
                 isValid={isValidTile(row, col)}

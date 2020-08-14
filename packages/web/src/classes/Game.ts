@@ -1,11 +1,10 @@
-import { getInitialPosition } from "../utils/board";
+import { getInitialPosition, flipBoard } from "../utils/board";
 import {
   PieceColor,
   PieceType,
   PieceName,
   Position,
   Match,
-  Move,
   Player
 } from "@fullstack-ts-chess/shared";
 import { socket } from "src/utils/socketUtil";
@@ -20,8 +19,6 @@ export class Game {
   board: (PieceType | null)[][] = [];
 
   getPiece = (row: number, col: number): PieceType | null => {
-    if (this.player.color === "black")
-      row = 7 - row;
     return this.board[row][col];
   };
 
@@ -149,6 +146,8 @@ export class Game {
     return [...horizontalMoves, ...verticalMoves];
   };
 
+  isPlayerBlack = () => this.player.color === "black";
+
   getValidKnightMoves = (piece: PieceType, row: number, col: number) => {
     const possibleMoves: Position[] = [
       { row: row + 1, col: col + 2 },
@@ -182,7 +181,6 @@ export class Game {
       movedPiece.moved = true;
       this.board[to.row][to.col] = movedPiece;
       this.board[from.row][from.col] = null;
-
       this.turn = this.turn === "white" ? "black" : "white";
     }
 
@@ -191,9 +189,6 @@ export class Game {
 
   movePiece = (from: Position, to: Position) => {
     if (this.turn !== this.player.color) return;
-
-    if (this.player.color === "black")
-      to.row = 7 - to.row;
 
     socket.emit("move_piece", {
       match: this.match,
@@ -206,7 +201,13 @@ export class Game {
   };
 
   getValidMoves = (piece: PieceType, row: number, col: number) => {
+
+    if (this.isPlayerBlack()) {
+      row = 7 - row;
+    }
+
     let validMoves = [];
+
     switch (piece.name) {
       case PieceName.PAWN:
         validMoves = this.getValidPawnMoves(piece, row, col);
@@ -227,17 +228,19 @@ export class Game {
         return [];
     }
 
-
-    if (this.player.color === "black") {
+    if (this.isPlayerBlack()) {
       validMoves = validMoves.map(m => {
         return [7 - m[0], m[1]]
       });
     }
+
     return validMoves;
   };
 
   init() {
     this.board = getInitialPosition();
+    if (this.isPlayerBlack())
+      this.board = flipBoard(this.board);
   }
 
   constructor(player: Player, match: Match) {

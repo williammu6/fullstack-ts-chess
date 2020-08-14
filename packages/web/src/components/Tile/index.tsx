@@ -1,15 +1,14 @@
 import React, { ReactNode } from "react";
 import clsx from "clsx";
 import Overlay from "../Overlay";
-import {Game} from 'src/classes/Game';
-import {Position} from '@fullstack-ts-chess/shared';
+import { Position, PieceColor } from "@fullstack-ts-chess/shared";
 
 interface Props {
   col: number;
   row: number;
   xLegend: string | null;
   yLegend: number | null;
-  game: Game;
+  side: PieceColor;
   isValid: boolean;
   isEmpty: boolean;
   children?: ReactNode;
@@ -18,10 +17,11 @@ interface Props {
 }
 
 const legendFont: React.CSSProperties = {
-  fontSize: "0.8rem",
-  fontWeight: "bold",
+  fontSize: "0.9rem",
+  fontWeight: "bolder",
   MozUserSelect: "none",
-  WebkitUserSelect: "none"
+  WebkitUserSelect: "none",
+  fontFamily: "Monaco"
 };
 
 const styleXLegend: React.CSSProperties = {
@@ -43,13 +43,14 @@ const Tile: React.FC<Props> = ({
   isValid,
   isEmpty,
   col,
+  side,
   row,
   children,
   handleTileClick,
   handleMovePiece
 }: Props) => {
   const isDark = (row: number, col: number) => {
-    return (row + col) % 2 === 1;
+    return (row + col) % 2 === (side === "black" ? 1 : 0);
   };
 
   const getBackground = (): string => {

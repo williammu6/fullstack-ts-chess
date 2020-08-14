@@ -26,6 +26,18 @@ const getRowPieces = (color: "black" | "white") => {
   return row;
 };
 
+const flip = (board: (PieceType|null)[][]) => {
+
+  return board.reverse()[0].map((_, index: number) => (
+    board.map((row) => row[index])
+  ))
+};
+
+export const flipBoard = (board: (PieceType|null)[][]) => {
+  board = flip(board);
+  return flip(board);
+}
+
 const getRowPawns = (color: "black" | "white"): PieceType[] => {
   return Array.from({ length: 8 }, () => ({
     name: PieceName.PAWN,
