@@ -67,22 +67,28 @@ const Board: React.FC<Props> = ({ game }: Props) => {
 
   const getPiece = (row: number, col: number) => {
     const piece = game.getPiece(row, col);
-    if (piece) return <Piece piece={piece} />;
+    if (piece)
+      return (
+        <Piece
+          handleTileClick={(row, col) => handleTileClick(row, col)}
+          row={row}
+          col={col}
+          piece={piece}
+        />
+      );
     return null;
   };
 
   const getXLegend = (row: number, col: number) => {
     if (row === 7) {
-      if (game.isPlayerBlack())
-        col = 7 - col;
+      if (game.isPlayerBlack()) col = 7 - col;
       return letters[col];
     }
     return null;
   };
   const getYLegend = (row: number, col: number) => {
     if (col === 0) {
-      if (game.isPlayerBlack())
-        row = 7 - row;
+      if (game.isPlayerBlack()) row = 7 - row;
       return 8 - row;
     }
     return null;

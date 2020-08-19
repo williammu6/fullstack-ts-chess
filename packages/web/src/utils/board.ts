@@ -1,5 +1,5 @@
 import { charPieces } from "../Constants";
-import { PieceType, PieceName, Player } from "@fullstack-ts-chess/shared";
+import { PieceType, PieceName } from "@fullstack-ts-chess/shared";
 
 const piecesOrder: string[] = [
   "ROOK",

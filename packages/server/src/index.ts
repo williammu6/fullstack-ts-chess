@@ -62,7 +62,7 @@ const getSocketByPlayer = (player: Player): io.Socket => {
   throw new Error("Player's socket not found.");
 };
 
-const flipMove = ({from, to}: Move): { from: Position, to: Position } => {
+const flipMove = ({ from, to }: Move): { from: Position; to: Position } => {
   from.row = 7 - from.row;
   to.row = 7 - to.row;
 
@@ -70,7 +70,7 @@ const flipMove = ({from, to}: Move): { from: Position, to: Position } => {
   to.col = 7 - to.col;
 
   return { from, to };
-}
+};
 
 const handleMovePiece = (move: Move) => {
   const turn = move.turn;
@@ -110,8 +110,8 @@ socket.on("connection", (s: io.Socket) => {
   });
 });
 
-const PORT = 8889;
+const port = process.env.PORT || 8889;
 
-server.listen(process.env.PORT || PORT, () => {
-  console.log(`Server started on port http://localhost:${PORT}`);
+server.listen(port, () => {
+  console.log(`Listening on port ${port}`);
 });

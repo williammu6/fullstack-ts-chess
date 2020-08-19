@@ -1,7 +1,8 @@
 import React, { ReactNode } from "react";
 import clsx from "clsx";
 import Overlay from "../Overlay";
-import { Position, PieceColor } from "@fullstack-ts-chess/shared";
+import { Position, PieceColor, PieceName } from "@fullstack-ts-chess/shared";
+import { useDrop } from "react-dnd";
 
 interface Props {
   col: number;
@@ -49,11 +50,32 @@ const Tile: React.FC<Props> = ({
   handleTileClick,
   handleMovePiece
 }: Props) => {
+  const [{ isOver, canDrop }, drop] = useDrop({
+    accept: [
+      PieceName.KING,
+      PieceName.PAWN,
+      PieceName.BISHOP,
+      PieceName.QUEEN,
+      PieceName.ROOK,
+      PieceName.KNIGHT,
+    ],
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+      canDrop: isValid,
+    }),
+    drop: () => {
+      if (isValid)
+        handleMovePiece({ row, col });
+    }
+  });
+
   const isDark = (row: number, col: number) => {
     return (row + col) % 2 === (side === "black" ? 1 : 0);
   };
 
   const getBackground = (): string => {
+    if (isOver && isValid) return 'bg-green-200';
+    if (isOver && !isValid) return 'bg-red-200';
     return isDark(row, col) ? "bg-gray-600" : "bg-white";
   };
 
@@ -71,6 +93,7 @@ const Tile: React.FC<Props> = ({
 
   return (
     <div
+      ref={drop}
       className={clsx(
         "relative flex-1 unselectable",
         getBackground(),

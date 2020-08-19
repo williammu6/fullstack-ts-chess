@@ -45,6 +45,7 @@
     "@types/socket.io-client": "^1.4.33",
     "@types/styled-components": "^5.1.2",
     "clsx": "^1.1.1",
+    "internal-ip": "^6.1.0",
     "postcss-cli": "^7.1.1",
     "styled-components": "^5.1.1",
     "tailwindcss": "^1.6.2"
